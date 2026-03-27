@@ -20,6 +20,7 @@ mongoose.connect(process.env.MONGODB_URI)
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/moods', require('./routes/moods'));
+app.use('/api/chatbot', require('./routes/chatbot'));
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

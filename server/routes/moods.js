@@ -91,4 +91,41 @@ router.get('/suggestions', auth, async (req, res) => {
     }
 });
 
+// Get Calendar Heatmap Data (All Time)
+router.get('/calendar', auth, async (req, res) => {
+    try {
+        const entries = await MoodEntry.aggregate([
+            { $match: { userId: new mongoose.Types.ObjectId(req.user.id) } },
+            { $sort: { timestamp: 1 } },
+            {
+                $group: {
+                    _id: { $dateToString: { format: "%Y-%m-%d", date: "$timestamp" } },
+                    dominantMood: { $last: "$mood" }
+                }
+            }
+        ]);
+        
+        const colorMap = {
+            'Happy': '#FAD9C1',
+            'Calm': '#D1EAE3',
+            'Angry': '#FFB2B2',
+            'Sad': '#B2DFFF',
+            'Tired': '#E1DFFF',
+            'Stressed': '#D1D1D1'
+        };
+
+        const markedDates = {};
+        entries.forEach(entry => {
+            markedDates[entry._id] = { 
+                selected: true, 
+                selectedColor: colorMap[entry.dominantMood] || '#1A1A1A'
+            };
+        });
+
+        res.json(markedDates);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 module.exports = router;
