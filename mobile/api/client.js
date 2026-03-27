@@ -2,8 +2,10 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 
-// Use localhost for iOS simulator and 10.0.2.2 for Android emulator
-const BASE_URL = Platform.OS === 'android' ? 'http://10.0.2.2:5001/api' : 'http://localhost:5001/api';
+// Use live Render URL for production, local for development
+const BASE_URL = __DEV__ 
+  ? (Platform.OS === 'android' ? 'http://10.0.2.2:5001/api' : 'http://localhost:5001/api')
+  : 'https://ehsaas-l14s.onrender.com/api';
 
 const client = axios.create({
   baseURL: BASE_URL,
