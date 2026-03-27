@@ -22,10 +22,13 @@ const RootLayoutNav = () => {
 
     if (loading) return;
     const inAuthGroup = segments[0] === '(auth)';
-    if (!user && !inAuthGroup) {
+    
+    if (user && inAuthGroup) {
+      // If we have a user and we are still in the auth section, GO HOME
+      router.replace('/(tabs)');
+    } else if (!user && !inAuthGroup) {
+      // If we have NO user and we are NOT in the auth section, GO AUTH
       router.replace('/(auth)');
-    } else if (user && inAuthGroup) {
-      router.replace('/');
     }
   }, [user, loading, segments]);
 

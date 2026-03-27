@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Platform, ScrollView, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Platform, ScrollView, Image, Modal, ActivityIndicator } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import { useRouter, Link } from 'expo-router';
-import { ChevronRight, ArrowLeft } from 'lucide-react-native';
+import { ChevronRight, ArrowLeft, Eye, EyeOff } from 'lucide-react-native';
 
 const GENDER_OPTIONS = ['Male', 'Female', 'Non-binary', 'Prefer not to say'];
 const AGE_OPTIONS = ['Under 18', '18-24', '25-34', '35-44', '45-54', '55+'];
 
 export default function Register() {
   const [step, setStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   // Step 1
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   
   // Step 2
   const [gender, setGender] = useState('');
@@ -32,14 +34,16 @@ export default function Register() {
   };
 
   const handleRegister = async () => {
+    setIsSubmitting(true);
     try {
       await register(name, email, password, {
         gender,
         profession,
         ageCategory
       });
-      router.replace('/');
+      // RootLayout will handle the redirect
     } catch (error) {
+      setIsSubmitting(false);
       Alert.alert('Registration Failed', error.response?.data?.error || 'Something went wrong');
     }
   };
@@ -98,15 +102,18 @@ export default function Register() {
                 keyboardType="email-address"
               />
             </View>
-            <View className="bg-[#EFDECF]/20 px-6 py-5 rounded-3xl border border-gray-100">
+            <View className="bg-[#EFDECF]/20 px-6 py-5 rounded-3xl border border-gray-100 flex-row items-center justify-between">
               <TextInput
-                className="text-lg text-accent"
+                className="text-lg text-accent flex-1"
                 placeholder="Password"
                 placeholderTextColor="#9D9D9D"
                 value={password}
                 onChangeText={setPassword}
-                secureTextEntry
+                secureTextEntry={!showPassword}
               />
+              <TouchableOpacity onPress={() => setShowPassword(!showPassword)} className="ml-2">
+                {showPassword ? <EyeOff size={22} color="#9D9D9D" /> : <Eye size={22} color="#9D9D9D" />}
+              </TouchableOpacity>
             </View>
 
             <TouchableOpacity 
@@ -182,6 +189,17 @@ export default function Register() {
         )}
 
       </ScrollView>
+
+      {/* Loading Modal */}
+      <Modal visible={isSubmitting} transparent animationType="fade">
+        <View className="flex-1 items-center justify-center bg-black/50">
+          <View className="bg-white p-10 rounded-4xl items-center shadow-2xl">
+            <ActivityIndicator size="large" color="#1A1A1A" />
+            <Text className="mt-4 text-xl font-bold text-accent">Creating your account...</Text>
+            <Text className="text-muted mt-2">Just a moment</Text>
+          </View>
+        </View>
+      </Modal>
     </KeyboardAvoidingView>
   );
 }
