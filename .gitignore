@@ -28,3 +28,6 @@ mobile/web-build/
 
 # Server Specific
 server/node_modules/
+
+# Docs
+HOSTING.md

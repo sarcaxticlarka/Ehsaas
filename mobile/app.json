@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "mobile",
+    "slug": "mobile",
+    "scheme": "ehsaas",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/app_icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/transparent_logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FDF6F0"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#FDF6F0",
+        "foregroundImage": "./assets/transparent_logo.png"
+      },
+      "package": "com.underxcore.mobile"
+    },
+    "web": {
+      "favicon": "./assets/app_icon.png"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "33796bac-a61e-4c73-b3e2-a0685958b127"
+      }
+    }
+  }
+}
